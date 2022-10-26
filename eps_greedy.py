@@ -24,7 +24,7 @@ class algo(ABC):# Abstract class for the algorithm to be implemented
     def update(self):
         pass
 
-class eps_greedy(algo):
+class Eps_greedy(algo):
     def __init__(self,eps):
         self.eps=eps
         self.pull_count=np.zeros(no_of_arms)
