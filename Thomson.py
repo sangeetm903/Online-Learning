@@ -23,3 +23,19 @@ class algo(ABC):# Abstract class for the algorithm to be implemented
         pass
     def update(self):
         pass
+    
+class Thompson(algo):
+    def __init__(self):
+        self.alpha_list=np.ones(no_of_arms)
+        self.beta_list=np.ones(no_of_arms)
+    def get_pred(self,ch=1):
+        pull_arm=np.argmax(np.randon.beta(self.alpha_list,self.beta_list))
+        if ch==1:
+            return pull_arm
+        pred=get_op()[pull_arm]
+        self.alpha_list[pull_arm]+=pred
+        self.beta_list[pull_arm]+=(1-pred)
+    def update(self,pull_arm,pred):
+        self.alpha_list[pull_arm]+=pred
+        self.beta_list[pull_arm]+=(1-pred)
+        
