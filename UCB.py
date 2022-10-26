@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Oct 26 19:24:41 2022
+Created on Wed Oct 26 18:49:21 2022
 
 @author: kurup
 """
@@ -24,26 +24,26 @@ class algo(ABC):# Abstract class for the algorithm to be implemented
     def update(self):
         pass
 
-class eps_greedy(algo):
-    def __init__(self,eps):
-        self.eps=eps
+class UCB(algo):
+    def __init__(self):
         self.pull_count=np.zeros(no_of_arms)
         self.prob_arm=np.zeros(no_of_arms)
         self.arms=list(range(no_of_arms))
+        self.counter=0
     def get_pred(self,ch=1):
-        if get_bin(1,self.eps)==1:
-            pull_arm=select(self.arms)
-            new_arm=1
+        if self.counter<no_of_arms:
+            pull_arm=self.counter
         else:
-            pull_arm=np.argmax(self.prob_arm)
-            new_arm=0
+            temp=np.repeat((2*np.log(self.counter)),no_of_arms)/self.pull_count
+            pull_arm=np.argmax(self.prob_arm+temp)
         if ch==1:
             return pull_arm
         pred=get_op()[pull_arm]
         self.prob_arm[pull_arm]=(self.prob_arm[pull_arm]*self.pull_count[pull_arm]+pred)/(self.pull_count[pull_arm]+1)
         self.pull_count[pull_arm]+=1
-        return pred,pull_arm,new_arm
-        # Prediction <pred> by arm_no <pull arm> ; new_arm ==1 if explore,  0 if exploit
+        self.counter+=1
+        return pred,pull_arm
     def update(self,pull_arm,pred):
         self.prob_arm[pull_arm]=(self.prob_arm[pull_arm]*self.pull_count[pull_arm]+pred)/(self.pull_count[pull_arm]+1)
         self.pull_count[pull_arm]+=1
+        self.counter+=1
