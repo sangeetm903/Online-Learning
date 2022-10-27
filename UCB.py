@@ -10,6 +10,8 @@ import numpy as np
 from numpy.random import binomial as get_bin
 from abc import ABC
 from random import choice as select
+from abstract import *
+'''
 ##################################
 # get_op() returns the output suggested by all 10 arms
 no_of_arms=10 # Number of arms
@@ -23,6 +25,7 @@ class algo(ABC):# Abstract class for the algorithm to be implemented
         pass
     def update(self):
         pass
+'''
 
 class UCB(algo):
     def __init__(self):

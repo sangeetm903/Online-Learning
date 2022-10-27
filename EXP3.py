@@ -11,7 +11,8 @@ from numpy.random import binomial as get_bin
 from abc import ABC
 from random import choice as select
 from random import choices as select_s
-
+from abstract import *
+'''
 ##################################
 # get_op() returns the output suggested by all 10 arms
 no_of_arms=10 # Number of arms
@@ -25,12 +26,13 @@ class algo(ABC):# Abstract class for the algorithm to be implemented
         pass
     def update(self):
         pass
+'''
 class EXP3 (algo):
     def __init__(self,eta):
         self.eta=eta
         self.prob_arms=np.ones(no_of_arms)/no_of_arms
     def get_pred(self,ch=1):
-        pull_arm=select_s(list(range(no_of_arms)),weights=self.prob_arms)
+        pull_arm=select_s(list(range(no_of_arms)),weights=self.prob_arms)[0]
         if ch==1:
             return pull_arm
         pred=get_op()[pull_arm]
@@ -38,7 +40,8 @@ class EXP3 (algo):
         Z_cap_t[pull_arm]=pred/self.prob_arms[pull_arm]
         self.prob_arms=(self.prob_arms*np.exp(self.eta*Z_cap_t*(-1)))
         self.prob_arms/=np.sum(self.prob_arms)
-        
+        return pred,pull_arm
+
         
     def update(self,pull_arm,pred):
         Z_cap_t=np.zeros(no_of_arms)
