@@ -33,14 +33,15 @@ class EXP3 (algo):
         pull_arm=select_s(list(range(no_of_arms)),weights=self.prob_arms)
         if ch==1:
             return pull_arm
+        pred=get_op()[pull_arm]
+        Z_cap_t=np.zeros(no_of_arms)
+        Z_cap_t[pull_arm]=pred/self.prob_arms[pull_arm]
+        self.prob_arms=(self.prob_arms*np.exp(self.eta*Z_cap_t*(-1)))
+        self.prob_arms/=np.sum(self.prob_arms)
         
         
-        
-        
-    def update(self):
-        
-        
-        
-        
-        return 0
-                
+    def update(self,pull_arm,pred):
+        Z_cap_t=np.zeros(no_of_arms)
+        Z_cap_t[pull_arm]=pred/self.prob_arms[pull_arm]
+        self.prob_arms=(self.prob_arms*np.exp(self.eta*Z_cap_t*(-1)))
+        self.prob_arms/=np.sum(self.prob_arms)   
