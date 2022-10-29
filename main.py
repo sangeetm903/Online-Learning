@@ -12,13 +12,14 @@ from UCB import *
 from EXP3 import *
 import numpy as np
 import matplotlib.pyplot as plt
+from statistics import stdev
 
 
 
 Time_T=500
 tot_regrets=np.zeros((Time_T,5))
 no_of_trials=50
-trial_outs=[]
+trialwise_reg=[]
 
 for trials in range(no_of_trials):
     U=UCB()
@@ -59,7 +60,7 @@ for trials in range(no_of_trials):
         regrets.append(np.max(cum_rew[i])-cum_arm_rew[i])
     regrets=np.array(regrets)
     tot_regrets+=regrets
-    trial_outs.append(regrets)
+    trialwise_reg.append(regrets)
     #print(regrets)
     for i in objs:
         del i
@@ -77,6 +78,28 @@ def plot_graph(regrets):
         plt.plot(np.arange(l),regrets[i],label=L_C[i][0],color=L_C[i][1])
     plt.legend(loc='best')
     plt.show()
+    
+U_reg=[]
+T_reg=[]
+EXP_reg=[]
+EP1_reg=[]
+EP2_reg=[]
+stddev_reg=[]
+objwise_reg=[U_reg,T_reg,EXP_reg,EP1_reg,EP2_reg]
+for i in trialwise_reg:
+    temp=np.array(i).T
+    for j in range(len(temp)):
+        objwise_reg[j].append(temp[j])
+for i in range(len(objwise_reg)):
+    temp=np.array(objwise_reg[i]).T
+    temp_stddev=[]
+    for j in temp:
+        temp_stddev.append(stdev(j))
+    
+    stddev_reg.append(temp_stddev)
+stddev_reg=np.array(stddev_reg).T
+
+
 plot_graph(tot_regrets/no_of_trials)
 
-
+plot_graph(stddev_reg)
