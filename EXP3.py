@@ -31,14 +31,15 @@ class EXP3 (algo):
     def __init__(self,eta):
         self.eta=eta
         self.prob_arms=np.ones(no_of_arms)/no_of_arms
+        self.arms=list(range(no_of_arms))
     def get_pred(self,ch=1):
-        pull_arm=select_s(list(range(no_of_arms)),weights=self.prob_arms)[0]
+        pull_arm=select_s(self.arms,weights=self.prob_arms)[0]
         if ch==1:
             return pull_arm
         pred=get_op()[pull_arm]
         Z_cap_t=np.zeros(no_of_arms)
         Z_cap_t[pull_arm]=pred/self.prob_arms[pull_arm]
-        self.prob_arms=(self.prob_arms*np.exp(self.eta*Z_cap_t*(-1)))
+        self.prob_arms=(self.prob_arms*np.exp(self.eta*Z_cap_t))
         self.prob_arms/=np.sum(self.prob_arms)
         return pred,pull_arm
 
@@ -46,5 +47,5 @@ class EXP3 (algo):
     def update(self,pull_arm,pred):
         Z_cap_t=np.zeros(no_of_arms)
         Z_cap_t[pull_arm]=pred/self.prob_arms[pull_arm]
-        self.prob_arms=(self.prob_arms*np.exp(self.eta*Z_cap_t*(-1)))
+        self.prob_arms=(self.prob_arms*np.exp(self.eta*Z_cap_t))
         self.prob_arms/=np.sum(self.prob_arms)   
